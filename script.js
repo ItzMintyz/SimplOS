@@ -6,6 +6,7 @@ const controls = wrapper.querySelector(".window-controls");
 const taskbarWindow = document.querySelector(".taskbar-window");
 const startButton = document.querySelector(".start-button");
 const startMenu = document.querySelector(".start-menu");
+const appButtons = startMenu.querySelectorAll("[data-app]");
 const storageKey = "simplos-window-position";
 let dragOffsetX = 0;
 let dragOffsetY = 0;
@@ -71,6 +72,16 @@ function setWindowVisible(visible) {
   taskbarWindow.setAttribute("aria-pressed", String(visible));
 }
 
+function openApp(appName) {
+  title.textContent = appName;
+  content.textContent = `${appName} is open.`;
+  taskbarWindow.textContent = appName;
+  setWindowVisible(true);
+  startMenu.hidden = true;
+  startButton.setAttribute("aria-expanded", "false");
+  title.focus();
+}
+
 title.addEventListener("pointerdown", startDrag);
 title.addEventListener("pointermove", drag);
 title.addEventListener("pointerup", stopDrag);
@@ -97,6 +108,12 @@ startButton.addEventListener("click", () => {
   const isOpening = startMenu.hidden;
   startMenu.hidden = !isOpening;
   startButton.setAttribute("aria-expanded", String(isOpening));
+});
+
+appButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    openApp(button.dataset.app);
+  });
 });
 
 document.addEventListener("click", (event) => {

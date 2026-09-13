@@ -124,11 +124,11 @@ nav button {
 .start-menu {
   position: fixed;
   left: 20px;
-  top: 50px;
+  top: 90px;
   width: 180px;
-  padding: 10px;
-  background: #eee;
-  border: 1px solid #666;
+  padding: 12px;
+  background: #ccc;
+  border: 1px solid #444;
   z-index: 30;
 }
 
@@ -137,7 +137,7 @@ nav button {
 }
 
 .start-menu h2 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-size: 16px;
   font-weight: normal;
 }
@@ -149,7 +149,7 @@ nav button {
 }
 
 .start-menu li + li {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .start-menu button {
@@ -212,9 +212,9 @@ section::after {
   <div class="start-menu" id="start-menu" hidden>
     <h2>Applications</h2>
     <ul>
-      <li><button type="button">File Manager</button></li>
-      <li><button type="button">Web Browser</button></li>
-      <li><button type="button">Settings</button></li>
+      <li><button type="button" data-app="File Manager">File Manager</button></li>
+      <li><button type="button" data-app="Web Browser">Web Browser</button></li>
+      <li><button type="button" data-app="Settings">Settings</button></li>
     </ul>
   </div>
   
