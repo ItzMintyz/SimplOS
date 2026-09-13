@@ -66,6 +66,8 @@ header {
 .wrapper.browser-window {
   width: 560px;
   height: 420px;
+  max-width: calc(100vw - 20px);
+  max-height: calc(100vh - 20px);
 }
 
 .wrapper header {
@@ -124,6 +126,7 @@ header {
   background: #f7f7f7;
   flex: 1;
   min-height: 0;
+  min-width: 0;
   overflow: auto;
 }
 
@@ -132,8 +135,10 @@ header {
   flex-direction: column;
   gap: 8px;
   flex: 1;
-  height: 100%;
+  height: auto;
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .browser-toolbar {
@@ -153,6 +158,7 @@ header {
 .browser-frame {
   width: 100%;
   min-height: 0;
+  min-width: 0;
   flex: 1;
   display: block;
   border: 1px solid #888;

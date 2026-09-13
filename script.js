@@ -26,6 +26,7 @@ function setPosition(windowElement, left, top, save = true) {
 }
 
 function saveSize(windowElement) {
+  if (windowElement.hidden) return;
   localStorage.setItem(`simplos-window-size-v2-${windowElement.id}`, JSON.stringify({
     width: windowElement.offsetWidth,
     height: windowElement.offsetHeight
@@ -41,6 +42,17 @@ function restoreSize(windowElement) {
     }
   } catch {
     localStorage.removeItem(`simplos-window-size-${windowElement.id}`);
+  }
+}
+
+function constrainSize(windowElement) {
+  const maxWidth = Math.max(220, window.innerWidth - 20);
+  const maxHeight = Math.max(100, window.innerHeight - 20);
+  if (windowElement.offsetWidth > maxWidth) {
+    windowElement.style.width = `${maxWidth}px`;
+  }
+  if (windowElement.offsetHeight > maxHeight) {
+    windowElement.style.height = `${maxHeight}px`;
   }
 }
 
@@ -196,7 +208,10 @@ function initializeWindow(windowElement) {
     });
   }
 
-  const resizeObserver = new ResizeObserver(() => saveSize(windowElement));
+  const resizeObserver = new ResizeObserver(() => {
+    constrainSize(windowElement);
+    saveSize(windowElement);
+  });
   resizeObserver.observe(windowElement);
   restoreSize(windowElement);
   restorePosition(windowElement);
@@ -298,6 +313,7 @@ document.addEventListener("keydown", (event) => {
 window.addEventListener("resize", () => {
   windows.forEach(({ windowElement }) => {
     if (!windowElement.hidden) {
+      constrainSize(windowElement);
       setPosition(windowElement, windowElement.offsetLeft, windowElement.offsetTop);
     }
   });
