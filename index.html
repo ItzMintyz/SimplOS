@@ -99,55 +99,32 @@ header {
 
 /* Create two columns/boxes that floats next to each other */
 nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 48px;
+  float: left;
+  width: 10%;
+  height: 500px; /* only for demonstration, should be removed */
   background: #ccc;
-  border-top: 1px solid #666;
-  padding: 6px 10px;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  padding: 20px;
 }
 
 nav ul {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   list-style-type: none;
   padding: 0;
-  margin: 0;
 }
 
 nav button {
-  border: 1px solid #888;
-  background: #eee;
-  color: #222;
-  min-height: 30px;
-  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  color: #0000ee;
+  padding: 0;
   cursor: pointer;
-}
-
-nav button:hover,
-nav button:focus {
-  background: #fff;
-}
-
-nav button:focus {
-  outline: 1px dotted #222;
-  outline-offset: 1px;
-}
-
-.taskbar-window[aria-pressed="true"] {
-  background: #aaa;
+  font: inherit;
+  text-decoration: underline;
 }
 
 article {
+  float: left;
   padding: 20px;
-  width: 100%;
+  width: 90%;
   background-color: #f1f1f1;
   height: 500px; /* only for demonstration, should be removed */
 }
@@ -190,6 +167,9 @@ section::after {
     <ul>
       <li><button type="button" class="start-button">Start</button></li>
       <li><button type="button" class="taskbar-window" aria-pressed="true">Generic Window</button></li>
+      <li><a href="#">google</a></li>
+      <li><a href="#">Visual Studio</a></li>
+      <li><a href="#">Settings</a></li>
     </ul>
   </nav>
   
