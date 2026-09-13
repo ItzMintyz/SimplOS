@@ -32,6 +32,7 @@ header {
   width: 260px;
   background: white;
   z-index: 10;
+  border: 1px solid #444;
 }
 
 .wrapper header {
@@ -39,11 +40,49 @@ header {
   color: white;
   padding: 10px 12px;
   font-size: 18px;
-  cursor: grab;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.wrapper header.active {
+.window-title {
+  cursor: grab;
+  flex: 1;
+}
+
+.window-title:focus {
+  outline: 1px dotted #fff;
+  outline-offset: 2px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.window-controls button {
+  border: 1px solid #aaa;
+  background: #666;
+  color: white;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.window-controls button:hover,
+.window-controls button:focus {
+  background: #888;
+}
+
+.window-controls button:focus {
+  outline: 1px dotted #fff;
+  outline-offset: 1px;
+}
+
+.wrapper header.active .window-title {
   cursor: grabbing;
 }
 
@@ -104,7 +143,14 @@ section::after {
 </header>
 
 <div class="wrapper">
-  <header>Generic Window</header>
+  <header>
+    <span class="window-title" tabindex="0">Generic Window</span>
+    <div class="window-controls" aria-label="Window controls">
+      <button type="button" data-action="minimize" aria-label="Minimize window">_</button>
+      <button type="button" data-action="reset" aria-label="Reset window position">R</button>
+      <button type="button" data-action="close" aria-label="Close window">X</button>
+    </div>
+  </header>
   <div class="content">This box can be dragged around the page.</div>
 </div>
 
@@ -138,7 +184,7 @@ section::after {
   setInterval(updateTime, 1000);
 </script>
 
-<script src="draggable-div-in-javascript/script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
