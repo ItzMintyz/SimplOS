@@ -3,6 +3,8 @@ const header = wrapper.querySelector("header");
 const title = wrapper.querySelector(".window-title");
 const content = wrapper.querySelector(".content");
 const controls = wrapper.querySelector(".window-controls");
+const taskbarWindow = document.querySelector(".taskbar-window");
+const startButton = document.querySelector(".start-button");
 const storageKey = "simplos-window-position";
 let dragOffsetX = 0;
 let dragOffsetY = 0;
@@ -63,6 +65,11 @@ function stopDrag(event) {
   }
 }
 
+function setWindowVisible(visible) {
+  wrapper.hidden = !visible;
+  taskbarWindow.setAttribute("aria-pressed", String(visible));
+}
+
 title.addEventListener("pointerdown", startDrag);
 title.addEventListener("pointermove", drag);
 title.addEventListener("pointerup", stopDrag);
@@ -72,17 +79,28 @@ controls.addEventListener("click", (event) => {
   const action = event.target.dataset.action;
 
   if (action === "minimize") {
-    content.hidden = !content.hidden;
+    setWindowVisible(false);
   } else if (action === "reset") {
     localStorage.removeItem(storageKey);
     setPosition(120, 120);
   } else if (action === "close") {
-    wrapper.hidden = true;
+    setWindowVisible(false);
   }
 });
 
+taskbarWindow.addEventListener("click", () => {
+  setWindowVisible(wrapper.hidden);
+});
+
+startButton.addEventListener("click", () => {
+  setWindowVisible(true);
+  title.focus();
+});
+
 window.addEventListener("resize", () => {
-  setPosition(wrapper.offsetLeft, wrapper.offsetTop);
+  if (!wrapper.hidden) {
+    setPosition(wrapper.offsetLeft, wrapper.offsetTop);
+  }
 });
 
 restorePosition();
