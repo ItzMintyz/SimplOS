@@ -140,6 +140,24 @@ function initializeWindow(windowElement) {
     }
   });
 
+  const browserForm = windowElement.querySelector(".browser-toolbar");
+  const browserFrame = windowElement.querySelector(".browser-frame");
+  if (browserForm && browserFrame) {
+    browserForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const address = browserForm.querySelector("input").value.trim();
+      if (!address) return;
+      try {
+        const url = new URL(address);
+        if (url.protocol === "http:" || url.protocol === "https:") {
+          browserFrame.src = url.href;
+        }
+      } catch {
+        browserFrame.src = `https://www.bing.com/search?q=${encodeURIComponent(address)}`;
+      }
+    });
+  }
+
   const resizeObserver = new ResizeObserver(() => saveSize(windowElement));
   resizeObserver.observe(windowElement);
   restoreSize(windowElement);
@@ -163,11 +181,27 @@ function createWindow(appName) {
         <button type="button" data-action="close" aria-label="Close window">X</button>
       </div>
     </header>
-    <div class="content">${appName} is open.</div>`;
+    <div class="content">${getAppContent(appName)}</div>`;
   document.body.append(windowElement);
   initializeWindow(windowElement);
   setPosition(windowElement, 160 + (nextWindowId - 2) * 20, 140 + (nextWindowId - 2) * 20);
   return windows.get(appName);
+}
+
+function getAppContent(appName) {
+  if (appName !== "Web Browser") {
+    return `${appName} is open.`;
+  }
+
+  return `
+    <div class="browser-content">
+      <form class="browser-toolbar">
+        <input type="search" value="https://www.bing.com" aria-label="Search Bing">
+        <button type="submit">Go</button>
+      </form>
+      <iframe class="browser-frame" src="https://www.bing.com" title="Bing"></iframe>
+      <p class="browser-fallback">If Bing does not load here, <a href="https://www.bing.com" target="_blank" rel="noopener">open Bing in a new tab</a>.</p>
+    </div>`;
 }
 
 function openApp(appName) {

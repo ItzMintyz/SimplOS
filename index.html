@@ -95,6 +95,40 @@ header {
   background: #f7f7f7;
 }
 
+.browser-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.browser-toolbar {
+  display: flex;
+  gap: 6px;
+}
+
+.browser-toolbar input {
+  min-width: 0;
+  flex: 1;
+}
+
+.browser-toolbar button {
+  padding: 2px 8px;
+}
+
+.browser-frame {
+  width: 100%;
+  min-height: 240px;
+  flex: 1;
+  border: 1px solid #888;
+  background: #fff;
+}
+
+.browser-fallback {
+  margin: 0;
+  font-size: 12px;
+}
+
 #currentTime {
   font-size: 18px;
   margin-top: 8px;
