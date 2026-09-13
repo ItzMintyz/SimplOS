@@ -94,14 +94,23 @@ taskbarWindow.addEventListener("click", () => {
 });
 
 startButton.addEventListener("click", () => {
-  startMenu.hidden = !startMenu.hidden;
-  startButton.setAttribute("aria-expanded", String(!startMenu.hidden));
+  const isOpening = startMenu.hidden;
+  startMenu.hidden = !isOpening;
+  startButton.setAttribute("aria-expanded", String(isOpening));
 });
 
 document.addEventListener("click", (event) => {
-  if (!startMenu.hidden && !startMenu.contains(event.target) && event.target !== startButton) {
+  if (!startMenu.hidden && !startMenu.contains(event.target) && !startButton.contains(event.target)) {
     startMenu.hidden = true;
     startButton.setAttribute("aria-expanded", "false");
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !startMenu.hidden) {
+    startMenu.hidden = true;
+    startButton.setAttribute("aria-expanded", "false");
+    startButton.focus();
   }
 });
 
