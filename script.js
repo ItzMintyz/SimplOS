@@ -5,6 +5,56 @@ const taskbarWindows = document.querySelector("#taskbar-windows");
 const windows = new Map();
 let nextWindowId = 1;
 let nextZIndex = 11;
+const notesStorageKey = "simplos-saved-notes";
+
+function getSavedNotes() {
+  try {
+    const notes = JSON.parse(localStorage.getItem(notesStorageKey) || "{}");
+    return notes && typeof notes === "object" ? notes : {};
+  } catch {
+    localStorage.removeItem(notesStorageKey);
+    return {};
+  }
+}
+
+function saveNotes(notes) {
+  localStorage.setItem(notesStorageKey, JSON.stringify(notes));
+}
+
+function refreshFileManager() {
+  const fileManager = windows.get("File Manager");
+  if (!fileManager) return;
+  const list = fileManager.windowElement.querySelector(".file-manager-list");
+  if (!list) return;
+  list.replaceChildren();
+  const notes = getSavedNotes();
+  const names = Object.keys(notes);
+  if (!names.length) {
+    const empty = document.createElement("li");
+    empty.textContent = "No saved notes";
+    list.append(empty);
+    return;
+  }
+  names.forEach((name) => {
+    const item = document.createElement("li");
+    const open = document.createElement("button");
+    open.type = "button";
+    open.textContent = "Open";
+    open.addEventListener("click", () => openNote(name));
+    item.append(document.createTextNode(`${name}.txt`), open);
+    list.append(item);
+  });
+}
+
+function openNote(name) {
+  const notesWindow = windows.get("Notes") || createWindow("Notes");
+  const nameInput = notesWindow.windowElement.querySelector(".notes-name");
+  const textArea = notesWindow.windowElement.querySelector(".notes");
+  nameInput.value = name;
+  textArea.value = getSavedNotes()[name] || "";
+  setWindowVisible(notesWindow.windowElement, notesWindow.taskbarButton, true);
+  notesWindow.windowElement.querySelector(".window-title").focus();
+}
 
 function keepInViewport(windowElement, left, top) {
   const maxLeft = Math.max(0, window.innerWidth - windowElement.offsetWidth);
@@ -172,8 +222,19 @@ function initializeWindow(windowElement) {
 
   const notes = windowElement.querySelector(".notes");
   if (notes) {
-    notes.value = localStorage.getItem("simplos-notes") || "";
-    notes.addEventListener("input", () => localStorage.setItem("simplos-notes", notes.value));
+    const nameInput = windowElement.querySelector(".notes-name");
+    const saveButton = windowElement.querySelector("[data-action='save-note']");
+    const savedNames = Object.keys(getSavedNotes());
+    nameInput.value = savedNames[0] || "untitled";
+    notes.value = savedNames.length ? getSavedNotes()[savedNames[0]] : "";
+    saveButton.addEventListener("click", () => {
+      const name = nameInput.value.trim().replace(/\.txt$/i, "") || "untitled";
+      const savedNotes = getSavedNotes();
+      savedNotes[name] = notes.value;
+      saveNotes(savedNotes);
+      nameInput.value = name;
+      refreshFileManager();
+    });
   }
 
   const calculator = windowElement.querySelector(".calculator");
@@ -216,6 +277,7 @@ function initializeWindow(windowElement) {
   restoreSize(windowElement);
   restorePosition(windowElement);
   windows.set(appName, { windowElement, taskbarButton, content });
+  if (appName === "File Manager") refreshFileManager();
 }
 
 function createWindow(appName) {
@@ -243,13 +305,13 @@ function createWindow(appName) {
 
 function getAppContent(appName) {
   if (appName === "File Manager") {
-    return `<h3>Home</h3><ul class="file-list"><li>Documents</li><li>Downloads</li><li>Pictures</li><li>Projects</li></ul>`;
+    return `<div class="file-manager"><h3>Notes</h3><ul class="file-manager-list"></ul></div>`;
   }
   if (appName === "Settings") {
     return `<div class="settings-list"><strong>Appearance</strong><div class="settings-group"><span>Theme</span><button type="button" data-theme="light">Light background</button><button type="button" data-theme="dark">Dark background</button></div><div class="settings-group"><span>Wallpaper</span><button type="button" data-wallpaper="gray">Gray</button><button type="button" data-wallpaper="blue">Blue</button><button type="button" data-wallpaper="green">Green</button></div></div>`;
   }
   if (appName === "Notes") {
-    return `<form class="app-form"><label for="notes-area">Notes</label><textarea class="notes" id="notes-area" placeholder="Type a note..."></textarea></form>`;
+    return `<form class="app-form" onsubmit="return false"><label for="notes-name">File name</label><input class="notes-name" id="notes-name" type="text" value="untitled"><label for="notes-area">Notes</label><textarea class="notes" id="notes-area" placeholder="Type a note..."></textarea><div class="notes-actions"><button type="button" data-action="save-note">Save</button></div></form>`;
   }
   if (appName === "Calculator") {
     return `<div class="calculator"><input type="text" aria-label="Calculator display" readonly><div class="calculator-keys"><button type="button" data-value="7">7</button><button type="button" data-value="8">8</button><button type="button" data-value="9">9</button><button type="button" data-value="/">/</button><button type="button" data-value="4">4</button><button type="button" data-value="5">5</button><button type="button" data-value="6">6</button><button type="button" data-value="*">*</button><button type="button" data-value="1">1</button><button type="button" data-value="2">2</button><button type="button" data-value="3">3</button><button type="button" data-value="-">-</button><button type="button" data-value="0">0</button><button type="button" data-value=".">.</button><button type="button" data-action="equals">=</button><button type="button" data-value="+">+</button><button type="button" data-action="clear">Clear</button></div></div>`;
