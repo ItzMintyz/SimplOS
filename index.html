@@ -187,7 +187,7 @@ section::after {
   <div id="currentTime" aria-live="polite"></div>
 </header>
 
-<div class="wrapper">
+<div class="wrapper" id="generic-window" data-app="Generic Window">
   <header>
     <span class="window-title" tabindex="0">Generic Window</span>
     <div class="window-controls" aria-label="Window controls">
@@ -203,7 +203,7 @@ section::after {
   <nav>
     <ul>
       <li><button type="button" class="start-button" aria-expanded="false" aria-controls="start-menu">Start</button></li>
-      <li><button type="button" class="taskbar-window" aria-pressed="true">Generic Window</button></li>
+      <li id="taskbar-windows"><button type="button" class="taskbar-window" data-window-id="generic-window" aria-pressed="true">Generic Window</button></li>
       <li><a href="#">google</a></li>
       <li><a href="#">Visual Studio</a></li>
       <li><a href="#">Settings</a></li>
