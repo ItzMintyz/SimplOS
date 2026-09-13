@@ -25,6 +25,25 @@ function setPosition(windowElement, left, top, save = true) {
   }
 }
 
+function saveSize(windowElement) {
+  localStorage.setItem(`simplos-window-size-${windowElement.id}`, JSON.stringify({
+    width: windowElement.offsetWidth,
+    height: windowElement.offsetHeight
+  }));
+}
+
+function restoreSize(windowElement) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(`simplos-window-size-${windowElement.id}`));
+    if (saved && Number.isFinite(saved.width) && Number.isFinite(saved.height)) {
+      windowElement.style.width = `${saved.width}px`;
+      windowElement.style.height = `${saved.height}px`;
+    }
+  } catch {
+    localStorage.removeItem(`simplos-window-size-${windowElement.id}`);
+  }
+}
+
 function restorePosition(windowElement) {
   try {
     const saved = JSON.parse(localStorage.getItem(`simplos-window-position-${windowElement.id}`));
@@ -110,6 +129,9 @@ function initializeWindow(windowElement) {
       setWindowVisible(windowElement, taskbarButton, false);
     } else if (action === "reset") {
       localStorage.removeItem(`simplos-window-position-${windowElement.id}`);
+      localStorage.removeItem(`simplos-window-size-${windowElement.id}`);
+      windowElement.style.width = "260px";
+      windowElement.style.height = "";
       setPosition(windowElement, 120, 120);
     } else if (action === "close") {
       windowElement.remove();
@@ -118,6 +140,9 @@ function initializeWindow(windowElement) {
     }
   });
 
+  const resizeObserver = new ResizeObserver(() => saveSize(windowElement));
+  resizeObserver.observe(windowElement);
+  restoreSize(windowElement);
   restorePosition(windowElement);
   windows.set(appName, { windowElement, taskbarButton, content });
 }
