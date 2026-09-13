@@ -63,6 +63,11 @@ header {
   flex-direction: column;
 }
 
+.wrapper.browser-window {
+  width: 560px;
+  height: 420px;
+}
+
 .wrapper header {
   background: #444;
   color: white;
@@ -126,6 +131,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
   height: 100%;
   min-height: 0;
 }
@@ -148,11 +154,13 @@ header {
   width: 100%;
   min-height: 0;
   flex: 1;
+  display: block;
   border: 1px solid #888;
   background: #fff;
 }
 
 .browser-fallback {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 12px;
 }

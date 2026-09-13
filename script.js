@@ -26,7 +26,7 @@ function setPosition(windowElement, left, top, save = true) {
 }
 
 function saveSize(windowElement) {
-  localStorage.setItem(`simplos-window-size-${windowElement.id}`, JSON.stringify({
+  localStorage.setItem(`simplos-window-size-v2-${windowElement.id}`, JSON.stringify({
     width: windowElement.offsetWidth,
     height: windowElement.offsetHeight
   }));
@@ -34,7 +34,7 @@ function saveSize(windowElement) {
 
 function restoreSize(windowElement) {
   try {
-    const saved = JSON.parse(localStorage.getItem(`simplos-window-size-${windowElement.id}`));
+    const saved = JSON.parse(localStorage.getItem(`simplos-window-size-v2-${windowElement.id}`));
     if (saved && Number.isFinite(saved.width) && Number.isFinite(saved.height)) {
       windowElement.style.width = `${saved.width}px`;
       windowElement.style.height = `${saved.height}px`;
@@ -129,9 +129,9 @@ function initializeWindow(windowElement) {
       setWindowVisible(windowElement, taskbarButton, false);
     } else if (action === "reset") {
       localStorage.removeItem(`simplos-window-position-${windowElement.id}`);
-      localStorage.removeItem(`simplos-window-size-${windowElement.id}`);
-      windowElement.style.width = "260px";
-      windowElement.style.height = "";
+      localStorage.removeItem(`simplos-window-size-v2-${windowElement.id}`);
+      windowElement.style.width = appName === "Web Browser" ? "560px" : "260px";
+      windowElement.style.height = appName === "Web Browser" ? "420px" : "";
       setPosition(windowElement, 120, 120);
     } else if (action === "close") {
       windowElement.remove();
@@ -207,7 +207,7 @@ function createWindow(appName) {
   const windowId = `app-window-${nextWindowId}`;
   nextWindowId += 1;
   const windowElement = document.createElement("div");
-  windowElement.className = "wrapper";
+  windowElement.className = `wrapper${appName === "Web Browser" ? " browser-window" : ""}`;
   windowElement.id = windowId;
   windowElement.dataset.app = appName;
   windowElement.innerHTML = `
