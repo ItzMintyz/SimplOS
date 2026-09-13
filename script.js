@@ -5,6 +5,7 @@ const content = wrapper.querySelector(".content");
 const controls = wrapper.querySelector(".window-controls");
 const taskbarWindow = document.querySelector(".taskbar-window");
 const startButton = document.querySelector(".start-button");
+const startMenu = document.querySelector(".start-menu");
 const storageKey = "simplos-window-position";
 let dragOffsetX = 0;
 let dragOffsetY = 0;
@@ -93,8 +94,15 @@ taskbarWindow.addEventListener("click", () => {
 });
 
 startButton.addEventListener("click", () => {
-  setWindowVisible(true);
-  title.focus();
+  startMenu.hidden = !startMenu.hidden;
+  startButton.setAttribute("aria-expanded", String(!startMenu.hidden));
+});
+
+document.addEventListener("click", (event) => {
+  if (!startMenu.hidden && !startMenu.contains(event.target) && event.target !== startButton) {
+    startMenu.hidden = true;
+    startButton.setAttribute("aria-expanded", "false");
+  }
 });
 
 window.addEventListener("resize", () => {

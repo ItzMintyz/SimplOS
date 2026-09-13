@@ -121,6 +121,43 @@ nav button {
   text-decoration: underline;
 }
 
+.start-menu {
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  width: 180px;
+  padding: 10px;
+  background: #eee;
+  border: 1px solid #666;
+  z-index: 30;
+}
+
+.start-menu[hidden] {
+  display: none;
+}
+
+.start-menu h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.start-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.start-menu li + li {
+  margin-top: 6px;
+}
+
+.start-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
 article {
   float: left;
   padding: 20px;
@@ -165,13 +202,21 @@ section::after {
 <section>
   <nav>
     <ul>
-      <li><button type="button" class="start-button">Start</button></li>
+      <li><button type="button" class="start-button" aria-expanded="false" aria-controls="start-menu">Start</button></li>
       <li><button type="button" class="taskbar-window" aria-pressed="true">Generic Window</button></li>
       <li><a href="#">google</a></li>
       <li><a href="#">Visual Studio</a></li>
       <li><a href="#">Settings</a></li>
     </ul>
   </nav>
+  <div class="start-menu" id="start-menu" hidden>
+    <h2>Applications</h2>
+    <ul>
+      <li><button type="button">File Manager</button></li>
+      <li><button type="button">Web Browser</button></li>
+      <li><button type="button">Settings</button></li>
+    </ul>
+  </div>
   
   <article>
  
