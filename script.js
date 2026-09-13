@@ -185,6 +185,13 @@ function initializeWindow(windowElement) {
     settings.addEventListener("click", (event) => {
       if (event.target.dataset.theme === "dark") document.body.classList.add("dark");
       if (event.target.dataset.theme === "light") document.body.classList.remove("dark");
+      if (event.target.dataset.wallpaper) {
+        document.body.classList.remove("wallpaper-blue", "wallpaper-green");
+        if (event.target.dataset.wallpaper !== "gray") {
+          document.body.classList.add(`wallpaper-${event.target.dataset.wallpaper}`);
+        }
+        localStorage.setItem("simplos-wallpaper", event.target.dataset.wallpaper);
+      }
       localStorage.setItem("simplos-theme", document.body.classList.contains("dark") ? "dark" : "light");
     });
   }
@@ -224,13 +231,16 @@ function getAppContent(appName) {
     return `<h3>Home</h3><ul class="file-list"><li>Documents</li><li>Downloads</li><li>Pictures</li><li>Projects</li></ul>`;
   }
   if (appName === "Settings") {
-    return `<div class="settings-list"><strong>Appearance</strong><button type="button" data-theme="light">Light background</button><button type="button" data-theme="dark">Dark background</button></div>`;
+    return `<div class="settings-list"><strong>Appearance</strong><div class="settings-group"><span>Theme</span><button type="button" data-theme="light">Light background</button><button type="button" data-theme="dark">Dark background</button></div><div class="settings-group"><span>Wallpaper</span><button type="button" data-wallpaper="gray">Gray</button><button type="button" data-wallpaper="blue">Blue</button><button type="button" data-wallpaper="green">Green</button></div></div>`;
   }
   if (appName === "Notes") {
     return `<form class="app-form"><label for="notes-area">Notes</label><textarea class="notes" id="notes-area" placeholder="Type a note..."></textarea></form>`;
   }
   if (appName === "Calculator") {
     return `<div class="calculator"><input type="text" aria-label="Calculator display" readonly><div class="calculator-keys"><button type="button" data-value="7">7</button><button type="button" data-value="8">8</button><button type="button" data-value="9">9</button><button type="button" data-value="/">/</button><button type="button" data-value="4">4</button><button type="button" data-value="5">5</button><button type="button" data-value="6">6</button><button type="button" data-value="*">*</button><button type="button" data-value="1">1</button><button type="button" data-value="2">2</button><button type="button" data-value="3">3</button><button type="button" data-value="-">-</button><button type="button" data-value="0">0</button><button type="button" data-value=".">.</button><button type="button" data-action="equals">=</button><button type="button" data-value="+">+</button><button type="button" data-action="clear">Clear</button></div></div>`;
+  }
+  if (appName === "About SimplOS") {
+    return `<h3>SimplOS</h3><p>A small, plain desktop interface built with HTML, CSS, and JavaScript.</p><p>Windows can be moved, resized, minimized, and reopened from the taskbar.</p>`;
   }
   if (appName !== "Web Browser") return `${appName} is open.`;
 
@@ -255,6 +265,10 @@ function openApp(appName) {
 
 initializeWindow(document.querySelector("#generic-window"));
 if (localStorage.getItem("simplos-theme") === "dark") document.body.classList.add("dark");
+const savedWallpaper = localStorage.getItem("simplos-wallpaper");
+if (savedWallpaper === "blue" || savedWallpaper === "green") {
+  document.body.classList.add(`wallpaper-${savedWallpaper}`);
+}
 
 startButton.addEventListener("click", () => {
   const isOpening = startMenu.hidden;
