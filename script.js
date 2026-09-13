@@ -158,6 +158,37 @@ function initializeWindow(windowElement) {
     });
   }
 
+  const notes = windowElement.querySelector(".notes");
+  if (notes) {
+    notes.value = localStorage.getItem("simplos-notes") || "";
+    notes.addEventListener("input", () => localStorage.setItem("simplos-notes", notes.value));
+  }
+
+  const calculator = windowElement.querySelector(".calculator");
+  if (calculator) {
+    const display = calculator.querySelector("input");
+    calculator.addEventListener("click", (event) => {
+      if (event.target.dataset.value) display.value += event.target.dataset.value;
+      if (event.target.dataset.action === "clear") display.value = "";
+      if (event.target.dataset.action === "equals") {
+        try {
+          display.value = Function(`"use strict"; return (${display.value})`)();
+        } catch {
+          display.value = "Error";
+        }
+      }
+    });
+  }
+
+  const settings = windowElement.querySelector(".settings-list");
+  if (settings) {
+    settings.addEventListener("click", (event) => {
+      if (event.target.dataset.theme === "dark") document.body.classList.add("dark");
+      if (event.target.dataset.theme === "light") document.body.classList.remove("dark");
+      localStorage.setItem("simplos-theme", document.body.classList.contains("dark") ? "dark" : "light");
+    });
+  }
+
   const resizeObserver = new ResizeObserver(() => saveSize(windowElement));
   resizeObserver.observe(windowElement);
   restoreSize(windowElement);
@@ -189,9 +220,19 @@ function createWindow(appName) {
 }
 
 function getAppContent(appName) {
-  if (appName !== "Web Browser") {
-    return `${appName} is open.`;
+  if (appName === "File Manager") {
+    return `<h3>Home</h3><ul class="file-list"><li>Documents</li><li>Downloads</li><li>Pictures</li><li>Projects</li></ul>`;
   }
+  if (appName === "Settings") {
+    return `<div class="settings-list"><strong>Appearance</strong><button type="button" data-theme="light">Light background</button><button type="button" data-theme="dark">Dark background</button></div>`;
+  }
+  if (appName === "Notes") {
+    return `<form class="app-form"><label for="notes-area">Notes</label><textarea class="notes" id="notes-area" placeholder="Type a note..."></textarea></form>`;
+  }
+  if (appName === "Calculator") {
+    return `<div class="calculator"><input type="text" aria-label="Calculator display" readonly><div class="calculator-keys"><button type="button" data-value="7">7</button><button type="button" data-value="8">8</button><button type="button" data-value="9">9</button><button type="button" data-value="/">/</button><button type="button" data-value="4">4</button><button type="button" data-value="5">5</button><button type="button" data-value="6">6</button><button type="button" data-value="*">*</button><button type="button" data-value="1">1</button><button type="button" data-value="2">2</button><button type="button" data-value="3">3</button><button type="button" data-value="-">-</button><button type="button" data-value="0">0</button><button type="button" data-value=".">.</button><button type="button" data-action="equals">=</button><button type="button" data-value="+">+</button><button type="button" data-action="clear">Clear</button></div></div>`;
+  }
+  if (appName !== "Web Browser") return `${appName} is open.`;
 
   return `
     <div class="browser-content">
@@ -213,6 +254,7 @@ function openApp(appName) {
 }
 
 initializeWindow(document.querySelector("#generic-window"));
+if (localStorage.getItem("simplos-theme") === "dark") document.body.classList.add("dark");
 
 startButton.addEventListener("click", () => {
   const isOpening = startMenu.hidden;

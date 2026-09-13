@@ -16,6 +16,20 @@ body {
   position: relative;
 }
 
+body.dark {
+  background: #222;
+  color: #eee;
+}
+
+body.dark article {
+  background: #333;
+}
+
+body.dark .wrapper .content {
+  background: #ddd;
+  color: #111;
+}
+
 /* Style the header */
 header {
   background-color: #666;
@@ -133,6 +147,45 @@ header {
 .browser-fallback {
   margin: 0;
   font-size: 12px;
+}
+
+.app-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calculator input {
+  width: 100%;
+  text-align: right;
+}
+
+.calculator-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.file-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 #currentTime {
@@ -259,6 +312,8 @@ section::after {
       <li><button type="button" data-app="File Manager">File Manager</button></li>
       <li><button type="button" data-app="Web Browser">Web Browser</button></li>
       <li><button type="button" data-app="Settings">Settings</button></li>
+      <li><button type="button" data-app="Notes">Notes</button></li>
+      <li><button type="button" data-app="Calculator">Calculator</button></li>
     </ul>
   </div>
   
